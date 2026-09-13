@@ -601,9 +601,8 @@
     .tst-card{padding-bottom:20px}
   }
 </style>
-<link rel="stylesheet" href="assets/design.css">
 </head>
-<body id="inicio">
+<body>
   <!-- FONDO: capas detrás del canvas 3D. Da profundidad/textura sin tocar el hero.
        Orden (de atrás a delante): base con gradiente radial → charco de luz fría →
        bloom rojo (puntuación) → grano → viñeta. -->
@@ -620,7 +619,7 @@
        solo marca la sección activa (la web es de una sola página); "Redes
        Sociales" despliega los enlaces externos del colectivo. -->
   <nav id="topmenu" aria-label="Menú">
-    <a class="tm-btn tm-active tm-home" href="#inicio"><span class="tm-wide">Desarrollo Art&#237;stico</span><span class="tm-compact">Estudio</span></a>
+    <span class="tm-btn tm-active" aria-current="page">Desarrollo Artístico</span>
     <div class="tm-social">
       <button type="button" class="tm-btn" id="tm-social-btn"
               aria-haspopup="true" aria-expanded="false">Redes Sociales</button>
@@ -703,37 +702,21 @@
        es la sección que sube y lo cubre, y la que lleva el velo de fundido. ====== -->
   <section id="testimonios">
     <div class="tst-head">
-      <p class="section-label">01 / EN SUS PALABRAS</p>
-      <h2>Los artistas<br><span>hablan.</span></h2>
-      <p class="sub">Las voces detr&#225;s de la m&#250;sica.<br>Selecciona una tarjeta para leer su experiencia completa.</p>
+      <h2><span class="guill guill-open" aria-hidden="true">«</span>Lo que dicen los artistas que nos confiaron su <span class="nb">proyecto<span class="guill guill-close" aria-hidden="true">»</span></span></h2>
+      <p class="sub">Haz clic en una tarjeta para leerla entera · toca el nombre para ver su Instagram.</p>
     </div>
-    <div class="tst-controls" aria-label="Controles de testimonios"><span class="tst-position" aria-live="polite">01 / 04</span><button type="button" class="tst-prev" aria-label="Testimonio anterior" disabled>&#8592;</button><button type="button" class="tst-next" aria-label="Testimonio siguiente">&#8594;</button></div>
-    <div class="tst-row" id="artist-stories" data-dir="l" tabindex="0" role="region" aria-label="Experiencias de artistas"><div class="tst-track" aria-hidden="false"></div></div>
+    <div class="tst-row" data-dir="l"><div class="tst-track" aria-hidden="false"></div></div>
   </section>
 
   <!-- ====== CATÁLOGO: rejilla de portadas, tras los testimonios ====== -->
   <section id="catalogo">
     <div class="cat-head">
-      <p class="section-label">02 / HECHO EN TSUKIBOYZ</p>
-      <h2>Nuestro<br><span>sonido.</span></h2>
-      <p class="sub">Una selecci&#243;n de temas producidos, mezclados y masterizados por nuestro equipo.<br><span class="catalog-instruction">ESCUCHA EN SPOTIFY &#8599;</span></p>
+      <h2><span class="guill guill-open" aria-hidden="true">«</span>Esta es una selección de temas que hemos producido, mezclado y <span class="nb">masterizado<span class="guill guill-close" aria-hidden="true">»</span></span></h2>
+      <p class="sub">Toca una portada para escucharla · toca al artista para ver su Instagram.</p>
     </div>
     <div class="cat-grid" id="cat-grid"></div>
   </section>
 
-
-
-<footer class="site-footer">
-    <div class="footer-top">
-      <p class="section-label">EL SIGUIENTE TEMA PUEDE SER EL TUYO</p>
-      <a class="footer-contact" href="https://wa.link/3o1h36" target="_blank" rel="noopener noreferrer">Hablemos de tu proyecto <span aria-hidden="true">&#8599;</span></a>
-    </div>
-    <p class="footer-wordmark" aria-label="Tsukiboyz">TSUKIBOYZ<span aria-hidden="true">.</span></p>
-    <div class="footer-bottom">
-      <span>PRODUCCI&#211;N / MEZCLA / MASTERING</span>
-      <nav aria-label="Navegaci&#243;n al pie"><a href="#testimonios">Artistas</a><a href="#catalogo">M&#250;sica</a><a href="#inicio">Volver arriba &#8593;</a></nav>
-    </div>
-  </footer>
 
   <!-- reproductor: el iframe de YouTube se inserta SOLO al pulsar play, para no
        cargar ~1 MB de JS de terceros mientras se scrollea el hero. -->
@@ -898,37 +881,33 @@
     }
   </script>
 
-  <script>
-  window.tsuki3DError = function(error){
-    console.error('No se pudo mostrar el logo 3D:', error);
-    const overlay = document.getElementById('loader');
-    overlay.classList.add('ask');
-    overlay.setAttribute('role', 'status');
-    const label = overlay.querySelector('.ld-enter');
-    label.textContent = 'No se pudo mostrar el logo. Continuar';
-    label.onclick = function(){ overlay.classList.add('hide'); };
-  };
+  <script type="importmap">
+  {"imports":{
+    "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }}
   </script>
-  <script src="assets/vendor/THREE.js" onerror="tsuki3DError('Falta THREE.js')"></script>
-  <script src="assets/vendor/TsukiGeometryUtils.js" onerror="tsuki3DError('Faltan las utilidades 3D')"></script>
-  <script src="assets/vendor/TsukiGLTF.js" onerror="tsuki3DError('Falta GLTFLoader')"></script>
-  <script src="assets/vendor/TsukiEnvironment.js" onerror="tsuki3DError('Falta RoomEnvironment')"></script>
-  <script>
-  (function(){
+
+  <script type="module">
+  console.log('🎬 THREE.js script iniciando...');
+  
+  import * as THREE from 'three';
+  import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+  import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+
+  console.log('✅ Módulos THREE.js importados', {THREE, GLTFLoader, RoomEnvironment});
+  
   const canvas = document.getElementById('gl');
   console.log('📺 Canvas encontrado:', canvas);
-
+  
   try {
-    const THREE = window.THREE;
-    const {GLTFLoader} = window.TsukiGLTF;
-    const {RoomEnvironment} = window.TsukiEnvironment;
     if (!canvas) {
       throw new Error('Canvas #gl no encontrado en el DOM');
     }
 
     const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
     console.log('✅ Renderer WebGL creado', renderer);
-
+    
     renderer.setClearColor(0x000000, 0);
   // tope 1.5x (antes 2x): en pantallas Retina el shader de la tormenta ocupa
   // toda la pantalla y a 2x se pintan ~1.8 veces más píxeles por fotograma.
@@ -1072,7 +1051,7 @@
   // (MIN_MS): servido en local el modelo entra de golpe y la barra ni se vería.
   const ldEl  = document.getElementById('loader');
   const ldBar = ldEl.querySelector('.ld-bar i');
-  const LD_T0 = performance.now(), LD_MIN_MS = 1100;
+  const LD_T0 = performance.now(), LD_MIN_MS = 2000;
   let ldRatio = 0, ldDone = false, ldEnded = false;
   // Instante en que se destapa la cabeza. Sirve para el ARRANQUE: el primer
   // segundo la cabeza mira al frente (como si el cursor estuviera en el centro)
@@ -1101,14 +1080,9 @@
     // (la promesa de play() resuelve cuando empieza a sonar, no antes).
     const a = document.getElementById('tag-audio');
     if (!a || REDUCE){ ldReveal(); return; }
-    const audioTimeout = setTimeout(ldReveal, 5000);
-    a.addEventListener("error", ldReveal, {once:true});
-    let pr;
-    try { pr = a.play(); } catch(error){ clearTimeout(audioTimeout); ldReveal(); return; }
+    const pr = a.play();
     if (!pr || !pr.then){ ldReveal(); return; }   // navegadores que no devuelven promesa
-    pr.then(() => { clearTimeout(audioTimeout); ldReveal(); }).catch(()=>{
-      clearTimeout(audioTimeout);
-      if (ldEl.classList.contains("hide")) return;
+    pr.then(ldReveal).catch(()=>{
       // Los navegadores BLOQUEAN el sonido automático mientras el usuario no
       // haya tocado la página. Es una regla del navegador: no hay forma de
       // saltársela. Antes el tag se quedaba armado y sonaba TARDE, al primer
@@ -1132,58 +1106,36 @@
   // ---- carga del modelo ----
   const loader = new GLTFLoader();
   console.log('🔄 Iniciando carga de assets/cabeza-opt.glb...');
-
-  function modelReady(gltf){
+  
+  loader.load('assets/cabeza-opt.glb', (gltf)=>{
     console.log('✅ Modelo GLB cargado exitosamente:', gltf);
     const head = gltf.scene;
     const box = new THREE.Box3().setFromObject(head);
     const c = box.getCenter(new THREE.Vector3());
     const s = box.getSize(new THREE.Vector3());
-    // Normalize a parent group, preserving the model transforms.
-    const normalized = new THREE.Group();
-    normalized.add(head);
+    head.position.sub(c);                       // centrar en el origen
     const maxd = Math.max(s.x, s.y, s.z);
     const scale = 1.9 / maxd;                    // normalizar tamaño
-    normalized.scale.setScalar(scale);
-    normalized.position.copy(c).multiplyScalar(-scale);
+    head.scale.setScalar(scale);
     console.log('📏 Modelo escalado, agregando al rig...');
-    rig.add(normalized);
+    rig.add(head);
     console.log('✅ Modelo agregado al rig. Scene children:', scene.children.length, 'Rig children:', rig.children.length);
     fitView();
     ldDone = true;                               // la barra ya puede llegar al final
     console.log('🎉 Cabeza lista para renderizar');
-  }
-  function modelFailed(error){
-    ldEnded = true;
-    window.tsuki3DError(error);
-  }
-  if (location.protocol === 'file:'){
-    // Classic scripts work locally; fetch/XHR cannot read a local GLB.
-    const embedded = document.createElement('script');
-    embedded.src = 'assets/cabeza-opt.embedded.js';
-    embedded.onerror = () => modelFailed(new Error('Falta el modelo local'));
-    embedded.onload = () => {
-      try {
-        const binary = atob(window.TSUKI_MODEL_BASE64);
-        const bytes = new Uint8Array(binary.length);
-        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-        delete window.TSUKI_MODEL_BASE64;
-        loader.parse(bytes.buffer, '', modelReady, modelFailed);
-      } catch(error){ modelFailed(error); }
-      embedded.remove();
-    };
-    document.head.appendChild(embedded);
-  } else {
-    loader.load('assets/cabeza-opt.glb', modelReady, (event) => {
-      if (event.lengthComputable && event.total) ldRatio = event.loaded / event.total;
-    }, modelFailed);
-  }
+  }, (ev)=>{                                     // progreso real de la descarga
+    if (ev && ev.lengthComputable && ev.total) ldRatio = ev.loaded / ev.total;
+    console.log(`📥 Progreso GLB: ${(ldRatio*100).toFixed(1)}%`);
+  }, (err)=>{ 
+    console.error('❌ ERROR al cargar GLB:', err);
+    ldDone = true; 
+  });
 
   // ---- interacción: scroll + parallax de ratón ----
   let scrollN = 0;         // 0..1 según scroll
   const track = document.querySelector('.track');
   const heroTitle = document.getElementById('hero-title');
-
+  
   // Fallback si track no existe
   if (!track) {
     console.error('❌ CRÍTICO: Elemento .track no encontrado en el DOM');
@@ -1214,9 +1166,9 @@
   let trackH = 0, maxScroll = 1;
   let heroOn = true;        // ¿se ve el hero? si no, el loop 3D no pinta
   let hintOn = true;        // estado del "scroll" para no escribir estilo en cada evento
-
+  
   console.log('📍 Track element encontrado:', track, 'stage:', stage);
-
+  
   function measure(){
     if (!track) {
       console.error('❌ track es null en measure()');
@@ -1236,11 +1188,11 @@
     scrollN = clamp(y / maxScroll, 0, 1);
     if (AT !== null) scrollN = clamp(parseFloat(AT), 0, 1);
     heroOn = y < trackH + 8;          // a partir de ahí el catálogo lo tapa entero
-
+    
     if (y < 100) {  // Solo log en los primeros 100px de scroll
       console.log('🔄 onScroll: y=', y, 'trackH+8=', trackH+8, 'heroOn=', heroOn, 'scrollN=', scrollN.toFixed(3));
     }
-
+    
     const wantHint = !(scrollN > 0.02);
     if (wantHint !== hintOn){ hintOn = wantHint; hintEl.style.opacity = wantHint ? 1 : 0; }
     if (REVEAL) return;   // en modo proof todo queda forzado visible por el script de arriba
@@ -1341,7 +1293,7 @@
 
   function tick(){
     const t = clock.getElapsedTime();
-
+    
     // (DEBUG: solo la primera vez)
     if (t < 0.016 && heroOn) {
       console.log('🎬 TICK iniciado - heroOn:', heroOn, 'scene children:', scene.children.length);
@@ -1440,9 +1392,8 @@
   console.log('✅ Loop de animación iniciado');
   } catch (err) {
     console.error('❌ ERROR CRÍTICO en script THREE.js:', err);
-    window.tsuki3DError(err);
+    document.body.innerHTML += '<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:#000;color:#f00;font-family:monospace;z-index:9999;overflow:auto;padding:20px">ERROR Three.js:<br>' + (err.message || err) + '<pre>' + (err.stack || '') + '</pre></div>';
   }
-  })();
   </script>
 
   <!-- ====== CATÁLOGO: datos reales + montaje de rejilla + reveal por trigger ======
@@ -1499,14 +1450,12 @@
       var et = esc(t);
       var aHtml = arts.map(function(a){
         return '<a class="ig" href="'+esc(a[1])+'" target="_blank" rel="noopener"'
-             + ' aria-label="'+esc(a[0])+' en Instagram">'+esc(a[0])+' <span aria-hidden="true">&#8599;</span></a>';
+             + ' aria-label="'+esc(a[0])+' en Instagram">'+esc(a[0])+'</a>';
       }).join(', ');
       html += '<div class="cover">'
            +  '<img src="assets/portadas/'+f+'.jpg" alt="'+et+'" loading="lazy">'
            +  '<a class="sp-link" href="'+esc(u)+'" target="_blank" rel="noopener" aria-label="'+et+' en Spotify"></a>'
            +  '<span class="scrim" aria-hidden="true"></span>'
-           +  '<span class="cover-play" aria-hidden="true">&#8599;</span>'
-           +  '<span class="track-number" aria-hidden="true">'+String(k+1).padStart(2,'0')+' / TSUKI</span>'
            +  '<span class="info">'
            +    '<span class="t">'+et+'</span>'
            +    '<span class="artists">'+aHtml+'</span>'
@@ -1514,6 +1463,7 @@
            +  '</div>';
     }
     grid.innerHTML = html;
+
     // reveal por TRIGGER (suave), respetando reduced-motion y el modo ?reveal
     var cat = document.getElementById('catalogo');
     var cells = [].slice.call(grid.querySelectorAll('.cover'));
@@ -1573,7 +1523,7 @@
         +   '<img class="tst-av" src="assets/testimonios/'+t.img+'.jpg" alt="'+esc(t.name)+'" loading="lazy">'
         +   '<div class="tst-id">'
         +     '<a class="tst-name" href="'+esc(t.ig)+'" target="_blank" rel="noopener"'+tab
-        +        ' aria-label="'+esc(t.name)+' en Instagram">'+esc(t.name)+' <span class="artist-instagram">Instagram &#8599;</span></a>'
+        +        ' aria-label="'+esc(t.name)+' en Instagram">'+esc(t.name)+'</a>'
         +     '<span class="tst-role"><span class="flag" aria-hidden="true">'+t.flag+'</span>'+esc(t.place)+'</span>'
         +   '</div>'
         +   '<div class="tst-stars" aria-label="5 de 5" title="5 de 5">'+STARS+'</div>'
@@ -1585,13 +1535,13 @@
     function fill(track, order){
       var real='', copy='';
       order.forEach(function(i){ real += card(TST[i], false); copy += card(TST[i], true); });
-      track.innerHTML = real;
+      track.innerHTML = real + copy;
     }
     var rows = document.querySelectorAll('#testimonios .tst-row');
     if (!rows.length) return;
     // el set se repite 2 veces dentro de la pista para que, en pantallas anchas,
     // nunca se vea hueco entre la última tarjeta y la primera del bucle.
-    fill(rows[0].querySelector('.tst-track'), [0,1,2,3]);   // carrusel único →
+    fill(rows[0].querySelector('.tst-track'), [0,1,2,3,0,1,2,3]);   // carrusel único →
 
     // ABRIR AL PINCHAR (antes bastaba con pasar el ratón por encima).
     // Solo una abierta a la vez; mientras haya una abierta el marquee no corre.
@@ -1633,7 +1583,5 @@
     obs.observe(sec);
   })();
   </script>
-
-  <script src="assets/design.js"></script>
 </body>
 </html>

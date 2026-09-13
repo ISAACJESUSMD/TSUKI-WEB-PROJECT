@@ -601,7 +601,7 @@
     .tst-card{padding-bottom:20px}
   }
 </style>
-<link rel="stylesheet" href="assets/design.css">
+<link rel="stylesheet" href="assets/design-anterior.css">
 </head>
 <body id="inicio">
   <!-- FONDO: capas detrás del canvas 3D. Da profundidad/textura sin tocar el hero.
@@ -620,7 +620,7 @@
        solo marca la sección activa (la web es de una sola página); "Redes
        Sociales" despliega los enlaces externos del colectivo. -->
   <nav id="topmenu" aria-label="Menú">
-    <a class="tm-btn tm-active tm-home" href="#inicio"><span class="tm-wide">Desarrollo Art&#237;stico</span><span class="tm-compact">Estudio</span></a>
+    <span class="tm-btn tm-active" aria-current="page">Desarrollo Artístico</span>
     <div class="tm-social">
       <button type="button" class="tm-btn" id="tm-social-btn"
               aria-haspopup="true" aria-expanded="false">Redes Sociales</button>
@@ -704,26 +704,25 @@
   <section id="testimonios">
     <div class="tst-head">
       <p class="section-label">01 / EN SUS PALABRAS</p>
-      <h2>Los artistas<br><span>hablan.</span></h2>
-      <p class="sub">Las voces detr&#225;s de la m&#250;sica.<br>Selecciona una tarjeta para leer su experiencia completa.</p>
+      <h2><span class="guill guill-open" aria-hidden="true">«</span>Lo que dicen los artistas que nos confiaron su <span class="nb">proyecto<span class="guill guill-close" aria-hidden="true">»</span></span></h2>
+      <p class="sub">Haz clic en una tarjeta para leerla entera · toca el nombre para ver su Instagram.</p>
     </div>
-    <div class="tst-controls" aria-label="Controles de testimonios"><span class="tst-position" aria-live="polite">01 / 04</span><button type="button" class="tst-prev" aria-label="Testimonio anterior" disabled>&#8592;</button><button type="button" class="tst-next" aria-label="Testimonio siguiente">&#8594;</button></div>
-    <div class="tst-row" id="artist-stories" data-dir="l" tabindex="0" role="region" aria-label="Experiencias de artistas"><div class="tst-track" aria-hidden="false"></div></div>
+    <div class="tst-row" data-dir="l"><div class="tst-track" aria-hidden="false"></div></div>
   </section>
 
   <!-- ====== CATÁLOGO: rejilla de portadas, tras los testimonios ====== -->
   <section id="catalogo">
     <div class="cat-head">
       <p class="section-label">02 / HECHO EN TSUKIBOYZ</p>
-      <h2>Nuestro<br><span>sonido.</span></h2>
-      <p class="sub">Una selecci&#243;n de temas producidos, mezclados y masterizados por nuestro equipo.<br><span class="catalog-instruction">ESCUCHA EN SPOTIFY &#8599;</span></p>
+      <h2><span class="guill guill-open" aria-hidden="true">«</span>Esta es una selección de temas que hemos producido, mezclado y <span class="nb">masterizado<span class="guill guill-close" aria-hidden="true">»</span></span></h2>
+      <p class="sub">Toca una portada para escucharla · toca al artista para ver su Instagram.</p>
     </div>
     <div class="cat-grid" id="cat-grid"></div>
   </section>
 
 
 
-<footer class="site-footer">
+  <footer class="site-footer">
     <div class="footer-top">
       <p class="section-label">EL SIGUIENTE TEMA PUEDE SER EL TUYO</p>
       <a class="footer-contact" href="https://wa.link/3o1h36" target="_blank" rel="noopener noreferrer">Hablemos de tu proyecto <span aria-hidden="true">&#8599;</span></a>
@@ -1072,7 +1071,7 @@
   // (MIN_MS): servido en local el modelo entra de golpe y la barra ni se vería.
   const ldEl  = document.getElementById('loader');
   const ldBar = ldEl.querySelector('.ld-bar i');
-  const LD_T0 = performance.now(), LD_MIN_MS = 1100;
+  const LD_T0 = performance.now(), LD_MIN_MS = 2000;
   let ldRatio = 0, ldDone = false, ldEnded = false;
   // Instante en que se destapa la cabeza. Sirve para el ARRANQUE: el primer
   // segundo la cabeza mira al frente (como si el cursor estuviera en el centro)
@@ -1499,14 +1498,13 @@
       var et = esc(t);
       var aHtml = arts.map(function(a){
         return '<a class="ig" href="'+esc(a[1])+'" target="_blank" rel="noopener"'
-             + ' aria-label="'+esc(a[0])+' en Instagram">'+esc(a[0])+' <span aria-hidden="true">&#8599;</span></a>';
+             + ' aria-label="'+esc(a[0])+' en Instagram">'+esc(a[0])+'</a>';
       }).join(', ');
       html += '<div class="cover">'
            +  '<img src="assets/portadas/'+f+'.jpg" alt="'+et+'" loading="lazy">'
            +  '<a class="sp-link" href="'+esc(u)+'" target="_blank" rel="noopener" aria-label="'+et+' en Spotify"></a>'
            +  '<span class="scrim" aria-hidden="true"></span>'
            +  '<span class="cover-play" aria-hidden="true">&#8599;</span>'
-           +  '<span class="track-number" aria-hidden="true">'+String(k+1).padStart(2,'0')+' / TSUKI</span>'
            +  '<span class="info">'
            +    '<span class="t">'+et+'</span>'
            +    '<span class="artists">'+aHtml+'</span>'
@@ -1514,6 +1512,7 @@
            +  '</div>';
     }
     grid.innerHTML = html;
+
     // reveal por TRIGGER (suave), respetando reduced-motion y el modo ?reveal
     var cat = document.getElementById('catalogo');
     var cells = [].slice.call(grid.querySelectorAll('.cover'));
@@ -1573,7 +1572,7 @@
         +   '<img class="tst-av" src="assets/testimonios/'+t.img+'.jpg" alt="'+esc(t.name)+'" loading="lazy">'
         +   '<div class="tst-id">'
         +     '<a class="tst-name" href="'+esc(t.ig)+'" target="_blank" rel="noopener"'+tab
-        +        ' aria-label="'+esc(t.name)+' en Instagram">'+esc(t.name)+' <span class="artist-instagram">Instagram &#8599;</span></a>'
+        +        ' aria-label="'+esc(t.name)+' en Instagram">'+esc(t.name)+'</a>'
         +     '<span class="tst-role"><span class="flag" aria-hidden="true">'+t.flag+'</span>'+esc(t.place)+'</span>'
         +   '</div>'
         +   '<div class="tst-stars" aria-label="5 de 5" title="5 de 5">'+STARS+'</div>'
@@ -1585,13 +1584,13 @@
     function fill(track, order){
       var real='', copy='';
       order.forEach(function(i){ real += card(TST[i], false); copy += card(TST[i], true); });
-      track.innerHTML = real;
+      track.innerHTML = real + copy;
     }
     var rows = document.querySelectorAll('#testimonios .tst-row');
     if (!rows.length) return;
     // el set se repite 2 veces dentro de la pista para que, en pantallas anchas,
     // nunca se vea hueco entre la última tarjeta y la primera del bucle.
-    fill(rows[0].querySelector('.tst-track'), [0,1,2,3]);   // carrusel único →
+    fill(rows[0].querySelector('.tst-track'), [0,1,2,3,0,1,2,3]);   // carrusel único →
 
     // ABRIR AL PINCHAR (antes bastaba con pasar el ratón por encima).
     // Solo una abierta a la vez; mientras haya una abierta el marquee no corre.
@@ -1633,7 +1632,5 @@
     obs.observe(sec);
   })();
   </script>
-
-  <script src="assets/design.js"></script>
 </body>
 </html>
