@@ -5,11 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>TSUKIBOYZ</title>
 <link rel="icon" type="image/png" href="assets/favicon-tsuki.png">
-<!-- Parpadeo del ícono de la pestaña: un script (junto al menú superior, en
-     el body) cambia este href cada 5s entre ojos abiertos/cerrados. No se usa
-     una animación interna del SVG porque varios navegadores solo pintan una
-     foto fija de él y no reproducen animaciones adentro. -->
-<link rel="icon" type="image/svg+xml" href="assets/favicon-tsuki.svg" id="favicon-svg">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-tsuki.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -659,39 +655,19 @@
   })();
   </script>
 
-  <!-- PARPADEO del ícono de la pestaña: cada 5s cambia el favicon a la
-       versión "ojos cerrados" un instante y vuelve a la de "ojos abiertos".
-       Cambiar el href del <link> es la forma que funciona igual en todos los
-       navegadores (a diferencia de animar el propio SVG, que en la práctica
-       muchos navegadores no llegan a reproducir dentro de la pestaña). -->
-  <script>
-  (function(){
-    var link = document.getElementById('favicon-svg');
-    if (!link) return;
-    var OPEN = 'assets/favicon-tsuki.svg';
-    var CLOSED = 'assets/favicon-tsuki-closed.svg';
-    function blink(){
-      link.href = CLOSED;
-      setTimeout(function(){ link.href = OPEN; }, 180);
-    }
-    setInterval(blink, 5000);
-  })();
-  </script>
-
-  <!-- El menú se esconde en cuanto termina el hero y empieza la primera
-       sección de contenido (ahora "El plan"; antes era testimonios, pero el
-       plan se coló delante), y vuelve a aparecer si el usuario sube el
+  <!-- El menú se esconde en cuanto la sección de testimonios ("Los artistas
+       hablan") tapa la pantalla, y vuelve a aparecer si el usuario sube el
        scroll y sale de esa sección otra vez. Va en DOMContentLoaded porque
-       esa sección todavía no existe en el HTML en este punto de la página. -->
+       #testimonios todavía no existe en el HTML en este punto de la página. -->
   <script>
   document.addEventListener('DOMContentLoaded', function(){
     var menu = document.getElementById('topmenu');
-    var firstSection = document.getElementById('plan') || document.getElementById('testimonios');
+    var testimonios = document.getElementById('testimonios');
     var dd = document.getElementById('tm-dropdown');
     var ddBtn = document.getElementById('tm-social-btn');
-    if (!menu || !firstSection) return;
+    if (!menu || !testimonios) return;
     function update(){
-      var hide = firstSection.getBoundingClientRect().top <= 0;
+      var hide = testimonios.getBoundingClientRect().top <= 0;
       if (hide && !menu.classList.contains('tm-hide') && dd){
         dd.classList.remove('open');
         if (ddBtn) ddBtn.setAttribute('aria-expanded','false');
@@ -752,37 +728,11 @@
 
   <div class="track"></div>
 
-  <!-- ====== PLAN: tarjeta de precio y qué incluye el plan mensual. Va justo
-       después del hero (vídeo anclado) y antes de testimonios. ====== -->
-  <section id="plan">
-    <div class="plan-head">
-      <p class="section-label">01 / EL PLAN</p>
-      <h2>Un plan mensual.<br><span>Todo incluido.</span></h2>
-      <p class="sub">Un solo pago fijo cada mes. Un equipo completo trabajando en tu proyecto de principio a fin.</p>
-    </div>
-    <div class="plan-card">
-      <div class="plan-card-head">
-        <p class="plan-card-label">Plan mensual</p>
-        <p class="plan-price"><span class="amount">$450</span><span class="period">/ mes</span></p>
-      </div>
-      <ul class="plan-features">
-        <li><span class="dash" aria-hidden="true"></span>Canciones ilimitadas dentro del mes</li>
-        <li><span class="dash" aria-hidden="true"></span>Producción, mezcla y masterización</li>
-        <li><span class="dash" aria-hidden="true"></span>Revisiones ilimitadas (se realizan dentro de las horas de sesión)</li>
-        <li><span class="dash" aria-hidden="true"></span>Planificación de lanzamientos e identidad sonora</li>
-        <li><span class="dash" aria-hidden="true"></span>Grabación de voces guiada de forma remota</li>
-        <li><span class="dash" aria-hidden="true"></span>Apoyo en composición</li>
-        <li><span class="dash" aria-hidden="true"></span>Ayuda con el tema legal de splits (documento firmado por el equipo)</li>
-        <li><span class="dash" aria-hidden="true"></span>Feedback asíncrono por Discord entre sesiones</li>
-      </ul>
-    </div>
-  </section>
-
   <!-- ====== TESTIMONIOS: carrusel (marquee) de reseñas. Va PRIMERO tras el hero:
        es la sección que sube y lo cubre, y la que lleva el velo de fundido. ====== -->
   <section id="testimonios">
     <div class="tst-head">
-      <p class="section-label">02 / EN SUS PALABRAS</p>
+      <p class="section-label">01 / EN SUS PALABRAS</p>
       <h2>Los artistas<br><span>hablan.</span></h2>
       <p class="sub">Las voces detr&#225;s de la m&#250;sica.<br>Selecciona una tarjeta para leer su experiencia completa.</p>
     </div>
@@ -793,7 +743,7 @@
   <!-- ====== CATÁLOGO: rejilla de portadas, tras los testimonios ====== -->
   <section id="catalogo">
     <div class="cat-head">
-      <p class="section-label">03 / HECHO EN TSUKIBOYZ</p>
+      <p class="section-label">02 / HECHO EN TSUKIBOYZ</p>
       <h2>Nuestro<br><span>sonido.</span></h2>
       <p class="sub">Una selecci&#243;n de temas producidos, mezclados y masterizados por nuestro equipo.<br><span class="catalog-instruction">ESCUCHA EN SPOTIFY &#8599;</span></p>
     </div>
