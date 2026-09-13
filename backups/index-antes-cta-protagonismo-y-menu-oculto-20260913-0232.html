@@ -122,15 +122,11 @@
   /* ---------- MENÚ superior: dos accesos encima del título del hero ---------- */
   /* "Desarrollo Artístico" solo marca la sección activa (la web es de una
      página, no navega a nada); "Redes Sociales" despliega los enlaces
-     externos (Instagram, Spotify, YouTube, Beatstars). Visible mientras se
-     está en el hero; su z-index queda por debajo del loader (6) para no
-     verse flotando sobre la pantalla de carga. Se oculta al entrar en la
-     sección de testimonios y reaparece si se vuelve a subir (ver script
-     junto al menú, más abajo, que decide esto según el scroll). */
+     externos (Instagram, Spotify, YouTube, Beatstars). Va SIEMPRE visible
+     (no depende del scroll), por eso su z-index queda por debajo del loader
+     (6): así no se ve flotando sobre la pantalla de carga. */
   #topmenu{position:fixed;top:4vh;left:50%;transform:translateX(-50%);
-        z-index:5;display:flex;gap:14px;pointer-events:auto;
-        transition:opacity .4s ease, transform .4s ease}
-  #topmenu.tm-hide{opacity:0;transform:translate(-50%,-18px);pointer-events:none}
+        z-index:5;display:flex;gap:14px;pointer-events:auto}
   #topmenu .tm-btn{appearance:none;-webkit-appearance:none;
         background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.18);
         color:rgba(255,255,255,.75);font:inherit;
@@ -253,20 +249,18 @@
      botón): es el gancho de la frase y tiene que saltar sobre el blanco. */
   #cta .cta-msg .free{color:#25d366;font-weight:700}
 
-  /* botón: rojo de marca (#ab3530), pastilla con el logo de WhatsApp.
-     Agrandado y con más glow: es el botón más importante de la página, tiene
-     que ganarle el protagonismo visual a todo lo demás en esta sección. */
-  #cta .cta-btn{display:inline-flex;align-items:center;gap:14px;flex:0 0 auto;
-        padding:22px 42px;border-radius:999px;
+  /* botón: rojo de marca (#ab3530), pastilla con el logo de WhatsApp */
+  #cta .cta-btn{display:inline-flex;align-items:center;gap:12px;flex:0 0 auto;
+        padding:17px 30px;border-radius:999px;
         background:#ab3530;color:#fff;text-decoration:none;
-        font-size:clamp(17px,1.5vw,21px);font-weight:800;letter-spacing:.01em;
-        box-shadow:0 18px 50px rgba(171,53,48,.55), inset 0 1px 0 rgba(255,255,255,.18);
+        font-size:clamp(14px,1.15vw,17px);font-weight:700;letter-spacing:.01em;
+        box-shadow:0 12px 34px rgba(171,53,48,.42), inset 0 1px 0 rgba(255,255,255,.16);
         transition:transform .35s cubic-bezier(.22,1,.36,1), background .35s ease,
                    box-shadow .35s ease}
-  #cta .cta-btn:hover{background:#c23d37;transform:translateY(-3px) scale(1.03);
-        box-shadow:0 22px 58px rgba(171,53,48,.68), inset 0 1px 0 rgba(255,255,255,.22)}
+  #cta .cta-btn:hover{background:#c23d37;transform:translateY(-3px);
+        box-shadow:0 18px 44px rgba(171,53,48,.55), inset 0 1px 0 rgba(255,255,255,.2)}
   #cta .cta-btn:active{transform:translateY(-1px)}
-  #cta .cta-btn svg{width:26px;height:26px;flex:0 0 auto;fill:currentColor}
+  #cta .cta-btn svg{width:22px;height:22px;flex:0 0 auto;fill:currentColor}
 
 
   /* ---------- 5b) VÍDEO (mitad derecha del último tiempo) ----------
@@ -367,8 +361,8 @@
     #cta.show .cta-btn:hover{animation:none}
   }
   @keyframes ctaPulse{
-    0%,100%{box-shadow:0 18px 50px rgba(171,53,48,.55), inset 0 1px 0 rgba(255,255,255,.18)}
-    50%    {box-shadow:0 18px 58px rgba(171,53,48,.9), inset 0 1px 0 rgba(255,255,255,.18)}
+    0%,100%{box-shadow:0 12px 34px rgba(171,53,48,.42), inset 0 1px 0 rgba(255,255,255,.16)}
+    50%    {box-shadow:0 12px 40px rgba(171,53,48,.72), inset 0 1px 0 rgba(255,255,255,.16)}
   }
 
   /* móvil / pantallas estrechas: apila para que no se solapen sobre la cabeza */
@@ -389,7 +383,7 @@
     #video.show{transform:translate(-50%,0)}
     #video.blurred{transform:translate(-50%,-26px)}
     #cta .cta-msg{max-width:100%}
-    #cta .cta-btn{padding:19px 32px}
+    #cta .cta-btn{padding:16px 26px}
   }
 
   @media (prefers-reduced-motion:reduce){
@@ -651,31 +645,6 @@
     });
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
   })();
-  </script>
-
-  <!-- El menú se esconde en cuanto la sección de testimonios ("Los artistas
-       hablan") tapa la pantalla, y vuelve a aparecer si el usuario sube el
-       scroll y sale de esa sección otra vez. Va en DOMContentLoaded porque
-       #testimonios todavía no existe en el HTML en este punto de la página. -->
-  <script>
-  document.addEventListener('DOMContentLoaded', function(){
-    var menu = document.getElementById('topmenu');
-    var testimonios = document.getElementById('testimonios');
-    var dd = document.getElementById('tm-dropdown');
-    var ddBtn = document.getElementById('tm-social-btn');
-    if (!menu || !testimonios) return;
-    function update(){
-      var hide = testimonios.getBoundingClientRect().top <= 0;
-      if (hide && !menu.classList.contains('tm-hide') && dd){
-        dd.classList.remove('open');
-        if (ddBtn) ddBtn.setAttribute('aria-expanded','false');
-      }
-      menu.classList.toggle('tm-hide', hide);
-    }
-    addEventListener('scroll', update, {passive:true});
-    addEventListener('resize', update);
-    update();
-  });
   </script>
 
   <!-- 1) TÍTULO sobre la cabeza (1º en aparecer) — texto normal + círculo rojo a mano -->
