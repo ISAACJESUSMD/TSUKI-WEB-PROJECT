@@ -2,7 +2,7 @@
 
 Abre index.html con doble clic en un navegador con WebGL (Edge, Chrome, Firefox o Safari). La apertura local es compatible con Windows y macOS: no requiere Node, Python, extensiones de VS Code ni servidor. Conserva assets/ junto a index.html.
 
-El logo 3D, su seguimiento del cursor y los recursos locales funcionan sin internet. YouTube, Spotify, enlaces sociales y otros servicios externos necesitan conexion. Si aparece el boton de entrada, pulsalo para iniciar el audio.
+El logo 3D, su seguimiento del cursor y los recursos locales funcionan sin internet. YouTube, Spotify, enlaces sociales y otros servicios externos necesitan conexion. Al terminar la carga siempre aparece "Toca para entrar". Pulsa el boton para entrar e iniciar el audio; nunca se entra automaticamente.
 
 ## Funcionamiento
 

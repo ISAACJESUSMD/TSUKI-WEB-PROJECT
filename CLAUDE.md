@@ -22,7 +22,7 @@ Site HTML, CSS, and application logic live in index.html. Three.js 0.160.0 and i
 
 Reading top to bottom, `index.html` is built from these pieces:
 
-1. **Loading screen** — a progress bar tied to the real download progress of the 3D head model (`assets/cabeza-opt.glb`), with a minimum display time. It also gates a branded audio tag (`assets/audio/tag-tsukiboyz.m4a`) that must play at the exact moment the head is revealed; if the browser blocks autoplay, it falls back to a "tap to enter" prompt.
+1. **Loading screen** — a progress bar tied to the real download progress of the 3D head model (`assets/cabeza-opt.glb`), with a minimum display time. It also gates a branded audio tag (`assets/audio/tag-tsukiboyz.m4a`) that must play at the exact moment the head is revealed; the "tap to enter" prompt is mandatory on every load, including preview and reduced-motion modes. Audio is requested only on click; entry never waits for the playback promise.
 2. **3D hero (Three.js, `classic scripts`)** — loads and centers a chrome head GLB model, orients it toward the mouse cursor, and renders a full-screen custom shader "lightning storm" behind it on the same canvas. The DOM background layers (`#bg`) sit behind the transparent canvas for depth/grain/vignette, independent of the 3D scene.
 3. **Scroll-driven reveal (`onScroll`, `headY`)** — the `.track` element is `530vh` tall and drives, in five timed stages as the user scrolls: head alone → title → left copy box → right copy box → both boxes fade out and the WhatsApp CTA + video fade in, then the whole hero fades to hand off to the next section. **The stage thresholds in `onScroll()` and `headY()` are hand-tuned to `.track`'s height** — changing that height requires rescaling those thresholds too (this is called out in comments in the file itself).
 4. **Video block (`#video-embed` script)** — shows a cover image + play button; the YouTube iframe (`data-yt` attribute on `#video`) is only injected into the DOM on click, to avoid loading YouTube's JS while the hero is scrolling.
@@ -43,7 +43,7 @@ Both the catalog and testimonials scripts reveal their section via `Intersection
 
 Opening index.html directly uses assets/cabeza-opt.embedded.js and GLTFLoader.parse; HTTP/HTTPS uses assets/cabeza-opt.glb. Both contain the same model and embedded textures. Update both together: tools/actualizar-modelo.html regenerates the embedded script in a browser without installing anything. File URLs must not use fetch/XHR for the model or ES module imports.
 
-The model is centered and scaled using a parent group to preserve its original transforms. Load failures offer a Continue button, and audio has a timeout so it cannot prevent access indefinitely.
+The model is centered and scaled using a parent group to preserve its original transforms. Load failures offer a Continue button, and audio is requested only on the entry button click and cannot prevent access if playback fails or stalls.
 
 ## Assets
 

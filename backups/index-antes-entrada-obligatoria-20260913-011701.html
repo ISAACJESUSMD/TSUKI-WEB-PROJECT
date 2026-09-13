@@ -91,7 +91,11 @@
           background:#e9e9e9;transition:width .35s cubic-bezier(.4,0,.2,1)}
   #loader .ld-bar{transition:opacity .45s ease}
 
-  /* The entry button always appears after loading; audio starts only on click. */
+  /* «TOCA PARA ENTRAR»: solo sale si el navegador ha BLOQUEADO el sonido
+     automático (ver `ldFinish`). El tag de marca tiene que sonar justo cuando
+     aparece la cabeza, y para eso el navegador exige un gesto del usuario: se
+     pide aquí, en la carga, en vez de dejar el audio armado y que suene tarde.
+     Va encima de la barra (posición absoluta) para que no salte el layout. */
   #loader .ld-enter{position:absolute;left:50%;top:calc(50% + 20px);
           transform:translate(-50%,-50%);
           appearance:none;-webkit-appearance:none;background:transparent;
@@ -868,10 +872,11 @@
   <div id="loader">
     <div class="ld-word">TSUKIBOYZ</div>
     <div class="ld-bar" role="progressbar" aria-label="Cargando"><i></i></div>
-    <!-- Always requires a click after the model is ready. -->
-    <button class="ld-enter" type="button" disabled>Toca para entrar</button>
+    <!-- solo aparece si el navegador bloquea el sonido automático (ver ldFinish):
+         es el gesto que hace falta para que el tag suene al salir la cabeza -->
+    <button class="ld-enter" type="button">Toca para entrar</button>
   </div>
-  <!-- Brand audio: requested only when the entry button is clicked. -->
+  <!-- tag de marca: suena al terminar la barra de carga (ver #boot-audio) -->
   <audio id="tag-audio" src="assets/audio/tag-tsukiboyz.m4a" preload="auto"></audio>
 
   <!-- modo preview: ?reveal muestra el copy sin scroll (independiente del 3D) -->
@@ -889,6 +894,7 @@
       var _c=document.getElementById('cta');
       if(_c){ _c.classList.add('show'); _c.style.transition='none'; }
       var _h=document.getElementById('hint'); if(_h) _h.style.opacity=0;
+      var _l=document.getElementById('loader'); if(_l){ _l.style.transition='none'; _l.style.opacity=0; _l.style.display='none'; }
     }
   </script>
 
@@ -899,7 +905,6 @@
     overlay.classList.add('ask');
     overlay.setAttribute('role', 'status');
     const label = overlay.querySelector('.ld-enter');
-    label.disabled = false;
     label.textContent = 'No se pudo mostrar el logo. Continuar';
     label.onclick = function(){ overlay.classList.add('hide'); };
   };
@@ -1091,25 +1096,38 @@
     gateT0 = performance.now();                  // arranca la cuenta del segundo
   }
   function ldFinish(){
-    // Entry always requires an explicit click, regardless of autoplay policy.
-    const btn = ldEl.querySelector('.ld-enter');
-    ldEl.classList.add('ask');
-    btn.disabled = false;
-    btn.addEventListener('click', () => {
-      btn.disabled = true;
-      const audio = document.getElementById('tag-audio');
-      if (audio && !REDUCE){
-        try {
-          audio.currentTime = 0;
-          const playback = audio.play();
-          if (playback && typeof playback.catch === 'function') playback.catch(() => {});
-        } catch(error){ /* Audio failure must not prevent entry after a click. */ }
-      }
-      ldReveal();
-    }, {once:true});
+    // TAG DE MARCA: tiene que sonar EXACTAMENTE cuando aparece la cabeza, así
+    // que la cabeza NO se destapa hasta que el audio ha arrancado de verdad
+    // (la promesa de play() resuelve cuando empieza a sonar, no antes).
+    const a = document.getElementById('tag-audio');
+    if (!a || REDUCE){ ldReveal(); return; }
+    const audioTimeout = setTimeout(ldReveal, 5000);
+    a.addEventListener("error", ldReveal, {once:true});
+    let pr;
+    try { pr = a.play(); } catch(error){ clearTimeout(audioTimeout); ldReveal(); return; }
+    if (!pr || !pr.then){ ldReveal(); return; }   // navegadores que no devuelven promesa
+    pr.then(() => { clearTimeout(audioTimeout); ldReveal(); }).catch(()=>{
+      clearTimeout(audioTimeout);
+      if (ldEl.classList.contains("hide")) return;
+      // Los navegadores BLOQUEAN el sonido automático mientras el usuario no
+      // haya tocado la página. Es una regla del navegador: no hay forma de
+      // saltársela. Antes el tag se quedaba armado y sonaba TARDE, al primer
+      // clic, con la cabeza ya puesta. Ahora se pide el gesto aquí: la barra
+      // deja paso a «TOCA PARA ENTRAR» y, al pulsar, suena el tag y se destapa
+      // la cabeza a la vez. Si el navegador sí permite el autoplay (sitio ya
+      // visitado, o si hubo un clic durante la carga), esto ni se ve.
+      ldEl.classList.add('ask');
+      const btn = ldEl.querySelector('.ld-enter');
+      if (!btn){ ldReveal(); return; }
+      btn.addEventListener('click', () => {       // SOLO el clic encima del botón
+        try { a.currentTime = 0; a.play().catch(()=>{}); } catch(e){}
+        ldReveal();
+      }, {once:true});
+    });
   }
-  // Preview and reduced-motion modes also require the entry button.
-  ldPaint();
+  // (no se usa la constante REVEAL: se declara más abajo y aquí aún no existe)
+  if (location.search.includes('reveal')) gateT0 = performance.now() - 9000;  // modo proof: sin espera
+  else ldPaint();
 
   // ---- carga del modelo ----
   const loader = new GLTFLoader();
