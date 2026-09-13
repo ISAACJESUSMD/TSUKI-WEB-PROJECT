@@ -123,46 +123,6 @@
         font-size:10px;letter-spacing:.5em;color:#666;text-transform:uppercase;
         transition:opacity .5s ease;pointer-events:none}
 
-  /* ---------- MENÚ superior: dos accesos encima del título del hero ---------- */
-  /* "Desarrollo Artístico" solo marca la sección activa (la web es de una
-     página, no navega a nada); "Redes Sociales" despliega los enlaces
-     externos (Instagram, Spotify, YouTube, Beatstars). Va SIEMPRE visible
-     (no depende del scroll), por eso su z-index queda por debajo del loader
-     (6): así no se ve flotando sobre la pantalla de carga. */
-  #topmenu{position:fixed;top:4vh;left:50%;transform:translateX(-50%);
-        z-index:5;display:flex;gap:14px;pointer-events:auto}
-  #topmenu .tm-btn{appearance:none;-webkit-appearance:none;
-        background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.18);
-        color:rgba(255,255,255,.75);font:inherit;
-        font-size:clamp(10px,.85vw,12px);font-weight:800;letter-spacing:.14em;
-        text-transform:uppercase;padding:10px 18px;border-radius:999px;
-        cursor:pointer;white-space:nowrap;
-        backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-        transition:color .25s ease,border-color .25s ease,background .25s ease}
-  #topmenu .tm-btn:hover{color:#fff;border-color:rgba(171,53,48,.55)}
-  #topmenu .tm-btn:focus-visible{outline:2px solid #ab3530;outline-offset:2px}
-  /* botón "activo" (Desarrollo Artístico): no es clicable, solo referencia visual */
-  #topmenu .tm-active{color:#fff;border-color:#ab3530;
-        background:rgba(171,53,48,.16);cursor:default}
-  #topmenu .tm-social{position:relative}
-  #topmenu .tm-dropdown{position:absolute;top:calc(100% + 10px);left:50%;
-        transform:translateX(-50%) translateY(-8px);min-width:190px;
-        background:rgba(10,10,10,.94);border:1px solid rgba(255,255,255,.14);
-        border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:2px;
-        opacity:0;pointer-events:none;
-        transition:opacity .22s ease,transform .22s ease;
-        backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-        box-shadow:0 18px 40px -14px rgba(0,0,0,.7)}
-  #topmenu .tm-dropdown.open{opacity:1;transform:translateX(-50%) translateY(0);
-        pointer-events:auto}
-  #topmenu .tm-dropdown a{display:block;padding:10px 14px;border-radius:8px;
-        color:rgba(255,255,255,.78);font-size:13px;font-weight:600;
-        text-decoration:none;letter-spacing:.01em;
-        transition:background .2s ease,color .2s ease}
-  #topmenu .tm-dropdown a:hover,
-  #topmenu .tm-dropdown a:focus-visible{background:rgba(171,53,48,.18);
-        color:#fff;outline:none}
-
   /* ---------- 1) TÍTULO SOBRE LA CABEZA (blanco, mayúsculas, en arco) ---------- */
   /* la opacidad y el desplazamiento vertical los controla el scroll (JS): entra
      con el 1er scroll y luego se va hacia arriba. El arco lo dan los <path> del SVG */
@@ -371,9 +331,7 @@
 
   /* móvil / pantallas estrechas: apila para que no se solapen sobre la cabeza */
   @media (max-width:760px){
-    #topmenu{top:2vh;gap:8px}
-    #topmenu .tm-btn{padding:8px 12px}
-    #hero-title{top:11vh;width:92vw}
+    #hero-title{top:5vh;width:92vw}
     .corner{position:fixed;max-width:88vw;left:6vw;right:auto;text-align:left}
     #copy-bl{bottom:26vh}
     #copy-br{bottom:6vh;text-align:left}
@@ -614,41 +572,6 @@
   </div>
 
   <div id="stage"><canvas id="gl"></canvas></div>
-
-  <!-- MENÚ superior: siempre visible, encima del título. "Desarrollo Artístico"
-       solo marca la sección activa (la web es de una sola página); "Redes
-       Sociales" despliega los enlaces externos del colectivo. -->
-  <nav id="topmenu" aria-label="Menú">
-    <span class="tm-btn tm-active" aria-current="page">Desarrollo Artístico</span>
-    <div class="tm-social">
-      <button type="button" class="tm-btn" id="tm-social-btn"
-              aria-haspopup="true" aria-expanded="false">Redes Sociales</button>
-      <div class="tm-dropdown" id="tm-dropdown" role="menu" aria-label="Redes sociales">
-        <a role="menuitem" href="https://www.instagram.com/tsukiboyz_/" target="_blank" rel="noopener">Instagram</a>
-        <a role="menuitem" href="https://open.spotify.com/intl-es/artist/6BGPUhhR2rJ0EJjWBu0Lqe?si=4p7BvGliSuCk9LrJRZ6nBg" target="_blank" rel="noopener">Spotify</a>
-        <a role="menuitem" href="https://www.youtube.com/@TSUKIBOYZ-1" target="_blank" rel="noopener">YouTube</a>
-        <a role="menuitem" href="https://www.beatstars.com/TSUKIBOYZ" target="_blank" rel="noopener">Beatstars</a>
-      </div>
-    </div>
-  </nav>
-  <script>
-  (function(){
-    var btn = document.getElementById('tm-social-btn');
-    var dd  = document.getElementById('tm-dropdown');
-    if (!btn || !dd) return;
-    function close(){ dd.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
-    function toggle(){
-      var open = !dd.classList.contains('open');
-      dd.classList.toggle('open', open);
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    }
-    btn.addEventListener('click', function(e){ e.stopPropagation(); toggle(); });
-    document.addEventListener('click', function(e){
-      if (!dd.contains(e.target) && e.target !== btn) close();
-    });
-    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
-  })();
-  </script>
 
   <!-- 1) TÍTULO sobre la cabeza (1º en aparecer) — texto normal + círculo rojo a mano -->
   <div id="hero-title">
